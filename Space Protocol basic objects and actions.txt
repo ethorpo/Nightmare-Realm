@@ -1,0 +1,59 @@
+[Nightmare Protocol]
+Space Protocol:
+
+	Actions
+
+Go to Planet 
+Impulse (move)
+Fight (automatic)
+Trade
+
+
+	Objects 
+
+/*  */ = optional
+
+US: 
+-[Space Ship] 
+		{Health (force field) 1-100? + /* upgrades? */}
+		{Weapons (How to get them? Strength? Maximum amount can carry?) Starter one 5 + /* upgrades? */}
+		{Booster (moves) 1-25?}
+
+Friendly:
+-[Space Ship] 
+		{Trade: Loot for Heal 20% Health? }
+
+
+
+Enemy:
+-[Basic Space Ship]
+		{Spawn rate 98 - stage you are?}
+		{Health (force field) 20?}
+                {Weapons (Strength) 5?}
+/* 	        {Loot (upgrades weapon) drop rate null:  0 73%?
+						  basic: 1 25%?
+						  rare:  1 2%? }*/
+
+/*-[Rare Space Ship]
+		{Spawn rate 2 + stage you are?}
+		{Health (force field) 100?}
+		{Weapons (Strength) 20?}
+		{Loot (upgrades  weapon) drop rate null: 0 50%?
+					           rare: 1 45%?
+						   rare: 2 5%? }*/
+
+Planets:
+
+-[Neutral Planets]
+		{Loot ?}
+		{Booster recharge 5?}
+
+
+/* -[Planet Lawful]
+		{Weapons purchase  + upgrades? + selling stuff}*/
+
+Here's stuff please make them actual things -
+				John (Project Manager) 2017
+
+The sweet tasty irony -
+		Everyone (Nightmare Protocol{e}) 2017
