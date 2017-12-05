@@ -1,0 +1,16 @@
+Script
+	-Main Loop:
+ 		When you impulse (in impulse you have random events happens between planets,fights, and friendly ship if it is a friendly or planet you can go or continue impulse if you have you have to kill him)
+		That way 1 can make test with the line step by step faster
+
+	-Select Option Trade:
+		Button or something that activates the if statement Buy.
+
+	-Randomizer for the Location:
+		If it is an enemy, planet or friendly
+
+
+UI
+
+Everyone
+	-Take a shower
