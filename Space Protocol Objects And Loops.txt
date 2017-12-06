@@ -1,0 +1,364 @@
+[Nightmare Protocol]
+Space Protocol:
+
+
+Main Loop:
+
+(load choice box)
+
+when go to planet button pressed and (planet.alive){
+	load.PlanetLoop
+	}else print (no planet here)
+when Impulse button pressed{
+	load.ImpulseLoop
+	}
+when Trade button pressed and (FriendlyShip.alive or planet = lawful) {
+	load.TradeLoop
+	}
+
+
+
+Impulse loop:
+if choice = 1{
+move foward
+for(var i = 0; i < distance; i++){  \\distance is called int in the impulse code but i renamed it for readability
+	var event = random(1-100)
+	if event  <25 { load.friendly ship save}
+	else if event => 25 and <60 { load.EnemyLoop }
+	else if	event => 60 and <75 { planet = lawful, (ask player if they want to go to planet), if true { PlanetLoop }
+	else if event => 80 { planet = neutral, (ask player if they want to go to planet), if true { PlanetLoop }
+}
+if choice = 2{
+move Backwards (move)
+}
+
+PlanetLoop:
+if choice = 1 { 
+	if planet = neutral { loadNeutralPlanet }
+	else { loadLawfulPlanet }
+}
+else if choice = 2 {
+	(player leaves planet)
+}
+
+
+FightLoop:
+
+if choice = 1 {
+	if player.shoot(enemyShip)
+	enemyShip.shoot(player)
+	Continue fighting 
+	if True {
+	choice = 1}
+	else{choice = 2}
+else if choice = 2 { player flees combat }
+
+TradeLoop:
+
+	when buy weapon button pressed{
+	Friendlyship.buyWeapon()
+	}
+	when buy shield button pressed{
+	Friendlyship.buyShield()
+	}
+	when buy booster button pressed{
+	Friendlyship.buyBooster()
+	}
+	when buy repairs button pressed{
+	Friendlyship.buyHealth()
+	}
+	// similar code for planets, im not bothered repeating the code
+
+
+	Actions
+
+
+Impulse (move)
+
+	saveLocation(location) \\ save whatever was at this location so that if you return it stays the same instead of generating a new location
+	moveForwards(move)
+	loadLocation(location)
+
+
+Impulse Backwards (move)
+
+	saveLocation(location)
+	moveForwards(move)
+	loadLocation(location)
+
+Fight (automatic)
+	
+Trade
+	loadInterface(planet/ship)
+
+
+Objects 
+
+/*  */ = optional
+
+US: 
+-[Space Ship] 
+
+	private money = 20
+
+		{Health (force field) 1-100? + /* upgrades? */}
+	private health = 100
+	private maxHealth = 100
+	private dead = false
+
+	takeDamage(int){
+	health = health - int
+	if (health <= 0) { dead = true }
+	}
+	repair(int){
+	health = health + int
+	if (health > maxHealth) { health = maxHealth }
+	}
+	upgradeHealth(int){
+	maxHealth = maxHealth + int
+	health = health + int
+	}
+		{Weapons (How to get them? Strength? Maximum amount can carry?) Starter one 5 + /* upgrades? */}
+	private damage = 5
+
+	shoot(ship){
+	ship.takeDamage(damage)
+	}
+	replaceWeapon(int){
+	damage = int
+	}
+	upgradeWeapon(int){
+	damage = damage + int
+	}
+		{Booster (moves) 1-25?}
+	private speed = 10
+	private location = 0
+	private fuel = 20
+
+	moveForward(int){
+	if (int > speed) { int = speed }
+	fuel = fuel - int
+	if (fuel <=0){ 
+	int = int + fuel
+	fuel = 0
+	} 				\\ aka if the fuel is 0 or negative decrease the speed to match the fuel
+	
+	location = location + int
+	
+	updateSpawnrate()
+	}
+
+	moveBackwards(int){
+	
+	if (int > speed) { int = speed }
+	fuel = fuel - int
+	if (fuel <=0){ 
+	int = int + fuel
+	fuel = 0
+	}
+	location = location - int
+	
+	if(location < 0) {location = 0}
+	updateSpawnrate()
+	}
+	
+	speedUpgrade(int){
+	speed = speed + int
+	}
+	
+	salvageFuel(int){
+	health = health - (intx2)
+	if (health <= 0) { dead = true }
+	fuel = fuel + int
+	}
+
+Friendly:
+-[Space Ship] 
+		{Trade: Loot for Heal 20% Health? }
+	private Healthcost = 15
+	private Weaponcost = 25
+	private Shieldcost = 30
+	private Boostercost = 20
+	private weaponStrength = random(7-10)
+	
+	buyHealth{
+	if(ship.getMoney<Healthcost){ nothing }
+	else {
+	ship.setMoney(ship.getMoney - 15)
+	heal = ship.getMaxHealth x 0.2
+	ship.repair(heal)
+	}}
+	buyWeapon{
+	if(ship.getMoney<Weaponcost){ nothing }
+	else {
+	ship.setMoney(ship.getMoney - 25)
+	if weapon is rare{
+	}}
+	buyShield{
+	if(ship.getMoney<Shieldcost){ nothing }
+	else {
+	ship.setMoney(ship.getMoney - 30)
+	ship.upgradeHealth(10)
+	}}
+	buyBooster{
+	if(ship.getMoney<Boostercost){ nothing }
+	else {
+	ship.setMoney(ship.getMoney - 20)
+	ship.speedUpgrade(2)
+	buyFuel{
+	if(ship.getMoney<upgradeCost){ nothing }
+	else{
+	ship.setMoney(ship.getMoney - 10)
+	ship.setFuel(ship.getFuel+10)
+	}
+	
+	Continue trading 
+	if True {
+	TradeLoop}
+	else{mainLoop}
+	
+
+
+Enemy:
+-[Basic Space Ship]
+		{Spawn rate 98 - stage you are?}
+	private spawnRate = 100
+	updateSpawnrate{
+	spawnRate = 100 - ship.getLocation()
+	}
+		{Health (force field) 20?}
+	private health = 20
+	private dead = false
+	
+	takeDamage(int){
+	var dodge = 1-20
+	health = health - int
+	if (health <=0) { dead = true }
+	}
+
+	private damage = random(5-8)
+	
+	
+	
+	shoot(ship){
+	ship.takeDamage(damage)
+	}
+/* 	        {Loot (upgrades weapon) drop rate null:  0 73%?
+						  basic: 1 25%?
+						  rare:  1 2%? }*/
+	deathCheck{
+	if (dead = true) {
+	var lootchance = random(1-100)
+	ship.setMoney(ship.getMoney+15)
+		if (lootchance<=73){ nothing }
+		else if (lootchance >73 and <=98) {
+		(ask for user input for changing weapon)
+			if true {ship.replaceWeapon(damage)}
+		else if (lootchance >98) {
+		(ask for user input for changing weapon)
+			if true {ship.replaceWeapon(damage x 2)}
+	}
+
+[Rare Space Ship]
+
+		{Spawn rate 2 + stage you are?}
+	private spawnRate = 0
+	updateSpawnrate{
+	spawnRate = 0 + ship.getLocation()
+	}
+		{Health (force field) 100?}
+	private health = random(75-100)
+	private dead = false
+	
+	takeDamage(int){
+	health = health - int
+	if (health <=0) { dead = true }
+	}
+		{Weapons (Strength) 20?}
+	private damage = random(15-25)
+	
+	shoot(ship){
+	ship.takeDamage(damage)
+	}
+
+	if (dead = true) {
+	ship.setMoney(ship.getMoney+50)
+	var lootchance = random(1-100)
+		if (lootchance<=50){ nothing }
+		else if (lootchance >50 and <=95) {
+		(ask for user input for changing weapon)
+			if true {ship.replaceWeapon(damage)}
+		else if (lootchance >95) {
+		(ask for user input for changing weapon)
+			if true {ship.replaceWeapon(damage x 2)}
+
+
+
+Planets:
+
+-[Neutral Planets]
+		ScavengeLoop
+	private lootchance = random(1-100)
+	if (lootchance<20){Health = health - 10}
+		else if (lootchance =>20 and <=40) {
+		ship.setMoney(ship.getMoney + 20)
+		}
+		else if (lootchance >40 and <60) {
+		ship.upgradeHealth(5)
+		}
+		else if (lootchance =>60 and <=80) {
+		ship.setFuel(ship.getFuel + 10)
+		}
+		else if (lootchance >80) {
+		ship.speedUpgrade(1)
+		}
+
+
+		{Booster recharge 5?}
+	ship.setFuel(ship.getFuel + 5)
+		
+	Continue Scavenge	
+	    if True {
+	    ScavengeLoop}
+	    else{mainLoop}
+
+
+ [Planet Lawful]
+		{Weapons purchase  + upgrades? + selling stuff}*/
+	private upgradeCost = 20
+
+	buyHealth{
+	if(ship.getMoney<upgradeCost){ nothing }
+	else {
+	ship.setMoney(ship.getMoney - 20)
+	heal = ship.getMaxHealth x 0.2
+	ship.repair(heal)
+	}}
+	upgradeWeapon{
+	if(ship.getMoney<upgradeCost){ nothing }
+	else {
+	ship.setMoney(ship.getMoney - 15)
+	ship.upgradeWeapon(2)
+	}}
+	buyShield{
+	if(ship.getMoney<upgradeCost){ nothing }
+	else {
+	ship.setMoney(ship.getMoney - 25)
+	ship.upgradeHealth(10)
+	}}
+	buyBooster{
+	if(ship.getMoney<upgradeCost){ nothing }
+	else {
+	ship.setMoney(ship.getMoney - 15)
+	ship.speedUpgrade(2)
+	}}
+	buyFuel{
+	if(ship.getMoney<upgradeCost){ nothing }
+	else{
+	ship.setMoney(ship.getMoney - 10)
+	ship.setFuel(ship.getFuel+10)
+	}
+	Continue trading 
+	if True {
+	TradeLoop}
+	else{mainLoop}
