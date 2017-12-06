@@ -1,0 +1,5 @@
+I did the random objects logic then william did the object
+Help William in some part with the code 
+Analyse the code
+Test the code 
+Did the Black Box Test
