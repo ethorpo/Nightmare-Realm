@@ -1,0 +1,26 @@
+William,
+
+Juan needs you to turn your code into a loop so he can start on the testing
+(Ask him if your not sure what he means)
+
+Then also when thats done you need to in a seperate file have your code done out in boxes
+like Mr guy did when they were first introducting objects in the tutorials just to make
+it easier for them to read in the powerpoint.
+
+---------------------------------
+-		Enemy		-
+-				-		
+---------------------------------
+-		Spawn rate	-
+-				-
+---------------------------------
+-		Take Damage	-	
+-				-
+---------------------------------
+-		Shoot		-
+-				-
+---------------------------------
+
+Thanks,
+
+John.
