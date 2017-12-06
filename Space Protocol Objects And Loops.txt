@@ -118,6 +118,9 @@ US:
 	maxHealth = maxHealth + int
 	health = health + int
 	}
+	if health = 0 {
+	Game Over}
+	else{nothing}
 		{Weapons (How to get them? Strength? Maximum amount can carry?) Starter one 5 + /* upgrades? */}
 	private damage = 5
 
